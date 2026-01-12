@@ -28,4 +28,9 @@ public class AuthenticationSteps {
         Assertions.assertEquals(200, context.getResponse().statusCode());
         Assertions.assertNotNull(context.getResponse().jsonPath().getString("access_token"));
     }
+
+    @Then("the authentication response status should be {int}")
+    public void theAuthenticationResponseStatusShouldBe(int statusCode) {
+        Assertions.assertEquals(statusCode, context.getResponse().statusCode());
+    }
 }

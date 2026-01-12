@@ -18,7 +18,10 @@ public class CommonSteps {
 
     @Given("I am logged in")
     public void iAmLoggedIn() {
-        Response response = client.login("admin", "admin");
+        if (client == null) {
+            context.setClient(new SupersetApiClient());
+        }
+        Response response = context.getClient().login("admin", "admin");
         context.setResponse(response);
     }
 

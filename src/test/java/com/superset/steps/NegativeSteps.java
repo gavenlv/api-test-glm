@@ -20,13 +20,19 @@ public class NegativeSteps {
 
     @Given("I attempt to login with invalid credentials")
     public void iAttemptToLoginWithInvalidCredentials() {
-        Response response = client.login("invalid_user", "invalid_password");
+        if (client == null) {
+            context.setClient(new SupersetApiClient());
+        }
+        Response response = context.getClient().login("invalid_user", "invalid_password");
         context.setResponse(response);
     }
 
     @Given("I access API without authentication")
     public void iAccessApiWithoutAuthentication() {
-        Response response = client.getWithoutAuth("/api/v1/dashboard/");
+        if (client == null) {
+            context.setClient(new SupersetApiClient());
+        }
+        Response response = context.getClient().getWithoutAuth("/api/v1/dashboard/");
         context.setResponse(response);
     }
 
@@ -141,15 +147,21 @@ public class NegativeSteps {
 
     @Given("I request with invalid token")
     public void iRequestWithInvalidToken() {
-        client.setToken("invalid_token_12345");
-        Response response = client.get("/api/v1/dashboard/");
+        if (client == null) {
+            context.setClient(new SupersetApiClient());
+        }
+        context.getClient().setToken("invalid_token_12345");
+        Response response = context.getClient().get("/api/v1/dashboard/");
         context.setResponse(response);
     }
 
     @Given("I request with expired token")
     public void iRequestWithExpiredToken() {
-        client.setToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.expired.token");
-        Response response = client.get("/api/v1/dashboard/");
+        if (client == null) {
+            context.setClient(new SupersetApiClient());
+        }
+        context.getClient().setToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.expired.token");
+        Response response = context.getClient().get("/api/v1/dashboard/");
         context.setResponse(response);
     }
 
