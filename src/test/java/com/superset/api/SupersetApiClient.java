@@ -74,4 +74,14 @@ public class SupersetApiClient {
             .baseUri(BASE_URL)
             .get("/api/v1/security/csrf_token/");
     }
+
+    public Response getWithoutAuth(String endpoint) {
+        return RestAssured.given()
+            .baseUri(BASE_URL)
+            .get(endpoint);
+    }
+
+    public void setToken(String token) {
+        this.accessToken = token;
+    }
 }
