@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  db:
+    image: zlsmshoqvwt6q1.xuanyuan.run/postgres:15
+    container_name: superset_db
+    environment:
+      POSTGRES_DB: superset
+      POSTGRES_USER: superset
+      POSTGRES_PASSWORD: superset
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "superset"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: zlsmshoqvwt6q1.xuanyuan.run/redis:7
+    container_name: superset_redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  superset:
+    image: zlsmshoqvwt6q1.xuanyuan.run/apache/superset:latest
+    container_name: superset_app
+    ports:
+      - "8088:8088"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      SUPERSET_LOAD_EXAMPLES: "yes"
+      SUPERSET_SECRET_KEY: "your-secret-key-here-change-in-production"
+      DATABASE_DIALECT: postgresql
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_DB: superset
+      DATABASE_USER: superset
+      DATABASE_PASSWORD: superset
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      SUPERSET_CSRF_PROTECTION: "no"
+    volumes:
+      - ./superset_config.py:/app/pythonpath/superset_config.py
+    command: >
+      sh -c "
+      superset db upgrade &&
+      superset fab create-admin --username admin --firstname Admin --lastname User --email admin@superset.com --password admin &&
+      superset init &&
+      gunicorn --bind 0.0.0.0:8088 --access-logfile - --error-logfile - --workers 4 --worker-class gthread --threads 20 --timeout 120 --limit-request-line 4096 'superset.app:create_app()'
+      "
+
+volumes:
+  db_data:

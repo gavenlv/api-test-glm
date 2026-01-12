@@ -1,0 +1,34 @@
+-------------------------------------------------------------------------------
+Test set: com.superset.test.RunCucumberTest
+-------------------------------------------------------------------------------
+Tests run: 13, Failures: 6, Errors: 0, Skipped: 0, Time elapsed: 5.896 s <<< FAILURE! -- in com.superset.test.RunCucumberTest
+Chart API.Chart API - Get all charts -- Time elapsed: 0.217 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <200> but was: <500>
+	at com.superset.steps.DashboardSteps.theResponseStatusShouldBe(DashboardSteps.java:36)
+	at ✽.the response status should be 200(classpath:features/chart.feature:8)
+
+Dashboard API.Dashboard API - Get specific dashboard -- Time elapsed: 0.175 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <200> but was: <404>
+	at com.superset.steps.DashboardSteps.theResponseStatusShouldBe(DashboardSteps.java:36)
+	at ✽.the response status should be 200(classpath:features/dashboard.feature:14)
+
+Dataset API.Dataset API - Get specific dataset -- Time elapsed: 0.208 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <200> but was: <500>
+	at com.superset.steps.DashboardSteps.theResponseStatusShouldBe(DashboardSteps.java:36)
+	at ✽.the response status should be 200(classpath:features/dataset.feature:14)
+
+User API.User API - Get all users -- Time elapsed: 0.144 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <200> but was: <404>
+	at com.superset.steps.DashboardSteps.theResponseStatusShouldBe(DashboardSteps.java:36)
+	at ✽.the response status should be 200(classpath:features/user.feature:8)
+
+User API.User API - Get current user info -- Time elapsed: 0.138 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <200> but was: <401>
+	at com.superset.steps.DashboardSteps.theResponseStatusShouldBe(DashboardSteps.java:36)
+	at ✽.the response status should be 200(classpath:features/user.feature:14)
+
+User API.User API - Get roles -- Time elapsed: 0.154 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <200> but was: <404>
+	at com.superset.steps.DashboardSteps.theResponseStatusShouldBe(DashboardSteps.java:36)
+	at ✽.the response status should be 200(classpath:features/user.feature:20)
+
