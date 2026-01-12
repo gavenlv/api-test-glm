@@ -4,7 +4,6 @@ import com.superset.api.SupersetApiClient;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.Assertions;
 
 public class AuthenticationSteps {
@@ -28,15 +27,5 @@ public class AuthenticationSteps {
     public void theLoginShouldBeSuccessful() {
         Assertions.assertEquals(200, context.getResponse().statusCode());
         Assertions.assertNotNull(context.getResponse().jsonPath().getString("access_token"));
-    }
-
-    @Then("the response should contain access token")
-    public void theResponseShouldContainAccessToken() {
-        Assertions.assertNotNull(context.getResponse().jsonPath().getString("access_token"));
-    }
-
-    @Then("the authentication response status should be {int}")
-    public void theAuthenticationResponseStatusShouldBe(int statusCode) {
-        Assertions.assertEquals(statusCode, context.getResponse().statusCode());
     }
 }

@@ -1,5 +1,6 @@
 package com.superset.steps;
 
+import com.superset.api.SupersetApiClient;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;

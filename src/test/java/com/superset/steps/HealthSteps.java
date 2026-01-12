@@ -24,11 +24,6 @@ public class HealthSteps {
         context.setResponse(context.getClient().getHealth());
     }
 
-    @When("I request CSRF token")
-    public void iRequestCsrfToken() {
-        context.setResponse(context.getClient().getCsrfToken());
-    }
-
     @Then("the health check should be successful")
     public void theHealthCheckShouldBeSuccessful() {
         Assertions.assertEquals(200, context.getResponse().statusCode());

@@ -110,8 +110,8 @@ public class SecuritySteps {
         context.setResponse(response);
     }
 
-    @When("I request all users")
-    public void iRequestAllUsers() {
+    @When("I request security users")
+    public void iRequestSecurityUsers() {
         Response response = client.get("/api/v1/security/users/");
         context.setResponse(response);
     }

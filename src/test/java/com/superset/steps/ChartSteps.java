@@ -2,7 +2,6 @@ package com.superset.steps;
 
 import com.superset.api.SupersetApiClient;
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Assertions;
@@ -29,10 +28,5 @@ public class ChartSteps {
     @When("I request chart with id {int}")
     public void iRequestChartWithId(int id) {
         context.setResponse(context.getClient().get("/api/v1/chart/data?form_data=%7B%22slice_id%22%3A" + id + "%7D"));
-    }
-
-    @Then("the response should contain chart data")
-    public void theResponseShouldContainChartData() {
-        Assertions.assertNotNull(context.getResponse().jsonPath());
     }
 }

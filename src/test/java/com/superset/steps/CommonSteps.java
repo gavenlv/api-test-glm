@@ -130,4 +130,27 @@ public class CommonSteps {
     public void theResponseShouldContainDatasetList() {
         theResponseShouldContainList();
     }
+
+    @Then("the response should contain database list")
+    public void theResponseShouldContainDatabaseList() {
+        theResponseShouldContainList();
+    }
+
+    @Then("the response should contain user info")
+    public void theResponseShouldContainUserInfo() {
+        Response response = context.getResponse();
+        assert response.jsonPath().getString("result.username") != null || response.jsonPath().getString("username") != null;
+    }
+
+    @Then("the response should contain chart data")
+    public void theResponseShouldContainChartData() {
+        Response response = context.getResponse();
+        assert response.jsonPath() != null;
+    }
+
+    @Then("the response should contain access token")
+    public void theResponseShouldContainAccessToken() {
+        Response response = context.getResponse();
+        assert response.jsonPath().getString("access_token") != null;
+    }
 }
