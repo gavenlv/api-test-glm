@@ -14,13 +14,6 @@ public class DatasetSteps {
         this.context = context;
     }
 
-    @Given("I am logged in")
-    public void iAmLoggedIn() {
-        context.setClient(new SupersetApiClient());
-        Response loginResponse = context.getClient().login("admin", "admin");
-        Assertions.assertEquals(200, loginResponse.statusCode());
-    }
-
     @When("I request all datasets")
     public void iRequestAllDatasets() {
         context.setResponse(context.getClient().get("/api/v1/dataset/"));

@@ -170,14 +170,4 @@ public class NegativeSteps {
         Response response = client.post("/api/v1/saved_query/import/", invalidImport);
         context.setResponse(response);
     }
-
-    @Then("the response status should be {int}")
-    public void theResponseStatusShouldBe(int statusCode) {
-        Response response = context.getResponse();
-        if (response.statusCode() != statusCode) {
-            System.out.println("Expected status: " + statusCode + ", Actual: " + response.statusCode());
-            System.out.println("Response body: " + response.getBody().asString());
-        }
-        assert response.statusCode() == statusCode : "Expected status " + statusCode + " but got " + response.statusCode();
-    }
 }

@@ -89,7 +89,7 @@ public class TagSteps {
 
     @When("I tag an object")
     public void iTagAnObject() {
-        Response response = client.post("/api/v1/tag/dashboard/1/TestTag/");
+        Response response = client.post("/api/v1/tag/dashboard/1/TestTag/", "{}");
         context.setResponse(response);
     }
 

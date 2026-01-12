@@ -31,11 +31,6 @@ public class DashboardSteps {
         context.setResponse(context.getClient().get("/api/v1/dashboard/" + id));
     }
 
-    @Then("the response status should be {int}")
-    public void theResponseStatusShouldBe(int statusCode) {
-        Assertions.assertEquals(statusCode, context.getResponse().statusCode());
-    }
-
     @Then("the response should contain dashboard list")
     public void theResponseShouldContainDashboardList() {
         Assertions.assertNotNull(context.getResponse().jsonPath().getList("result"));
