@@ -120,4 +120,14 @@ public class CommonSteps {
     public void theResponseShouldContainCssTemplateList() {
         theResponseShouldContainList();
     }
+
+    @Then("the response should contain dashboard list")
+    public void theResponseShouldContainDashboardList() {
+        theResponseShouldContainList();
+    }
+
+    @Then("the response should contain dataset list")
+    public void theResponseShouldContainDatasetList() {
+        theResponseShouldContainList();
+    }
 }
