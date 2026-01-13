@@ -39,9 +39,10 @@ public class SavedQuerySteps {
         Map<String, Object> queryData = new HashMap<>();
         queryData.put("label", "Test Saved Query");
         queryData.put("description", "Test saved query description");
-        queryData.put("schema", "main");
-        queryData.put("sql", "SELECT * FROM birth_names LIMIT 10");
-        queryData.put("database_id", 1);
+        queryData.put("schema", "public");
+        queryData.put("catalog", "superset");
+        queryData.put("sql", "SELECT * FROM test_users LIMIT 10");
+        queryData.put("db_id", 1);
         
         Response response = client.post("/api/v1/saved_query/", queryData);
         context.setResponse(response);

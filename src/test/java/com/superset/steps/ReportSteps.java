@@ -43,7 +43,18 @@ public class ReportSteps {
         reportData.put("description", "Test report description");
         reportData.put("active", true);
         reportData.put("crontab", "0 0 * * *");
-        reportData.put("recipients", new String[]{"admin@example.com"});
+        reportData.put("database", 1);
+        reportData.put("creation_method", "alerts_reports");
+        reportData.put("report_format", "PNG");
+        reportData.put("log_retention", 90);
+        
+        Map<String, Object> recipient = new HashMap<>();
+        recipient.put("type", "Email");
+        Map<String, Object> recipientConfig = new HashMap<>();
+        recipientConfig.put("target", "admin@example.com");
+        recipient.put("recipient_config_json", recipientConfig);
+        
+        reportData.put("recipients", new Object[]{recipient});
         
         Response response = client.post("/api/v1/report/", reportData);
         context.setResponse(response);

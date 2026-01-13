@@ -35,7 +35,9 @@ public class RowLevelSecuritySteps {
         rlsData.put("description", "Test row level security rule");
         rlsData.put("filter_type", "Regular");
         rlsData.put("group_key", "test_group");
-        rlsData.put("clause", "test_column = 'test_value'");
+        rlsData.put("clause", "id = 1");
+        rlsData.put("roles", new Integer[]{1});
+        rlsData.put("tables", new Integer[]{1});
         
         Response response = client.post("/api/v1/rowlevelsecurity/", rlsData);
         context.setResponse(response);

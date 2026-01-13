@@ -31,10 +31,8 @@ public class ThemeSteps {
     @When("I create a theme")
     public void iCreateATheme() {
         Map<String, Object> themeData = new HashMap<>();
-        themeData.put("name", "Test Theme");
-        themeData.put("description", "Test theme description");
-        themeData.put("is_default", false);
-        themeData.put("is_dark", false);
+        themeData.put("theme_name", "Test Theme");
+        themeData.put("json_data", "{\"colors\": {\"primary\": \"#00A699\"}}");
         
         Response response = client.post("/api/v1/theme/", themeData);
         context.setResponse(response);
@@ -43,8 +41,8 @@ public class ThemeSteps {
     @When("I update a theme")
     public void iUpdateATheme() {
         Map<String, Object> themeData = new HashMap<>();
-        themeData.put("name", "Updated Theme");
-        themeData.put("description", "Updated theme description");
+        themeData.put("theme_name", "Updated Theme");
+        themeData.put("json_data", "{\"colors\": {\"primary\": \"#FF6B6B\"}}");
         
         Response response = client.put("/api/v1/theme/1", themeData);
         context.setResponse(response);

@@ -71,25 +71,31 @@ public class TagSteps {
 
     @When("I request tag favorite status")
     public void iRequestTagFavoriteStatus() {
-        Response response = client.get("/api/v1/tag/favorite_status/");
+        Map<String, Object> emptyBody = new HashMap<>();
+        Response response = client.post("/api/v1/tag/favorite_status/", emptyBody);
         context.setResponse(response);
     }
 
     @When("I request tag favorites")
     public void iRequestTagFavorites() {
-        Response response = client.get("/api/v1/tag/1/favorites/");
+        Map<String, Object> emptyBody = new HashMap<>();
+        Response response = client.post("/api/v1/tag/1/favorites/", emptyBody);
         context.setResponse(response);
     }
 
     @When("I request objects with tag")
     public void iRequestObjectsWithTag() {
-        Response response = client.get("/api/v1/tag/get_objects/");
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("tag_names", new String[]{"TestTag"});
+        Response response = client.post("/api/v1/tag/get_objects/", requestBody);
         context.setResponse(response);
     }
 
     @When("I tag an object")
     public void iTagAnObject() {
-        Response response = client.post("/api/v1/tag/dashboard/1/TestTag/", "{}");
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("tag_name", "TestTag");
+        Response response = client.put("/api/v1/tag/dashboard/1/", requestBody);
         context.setResponse(response);
     }
 
