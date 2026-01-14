@@ -30,63 +30,164 @@ public class ThemeSteps {
 
     @When("I create a theme")
     public void iCreateATheme() {
-        Map<String, Object> themeData = new HashMap<>();
-        themeData.put("theme_name", "Test Theme");
-        themeData.put("json_data", "{\"colors\": {\"primary\": \"#00A699\"}}");
-        
-        Response response = client.post("/api/v1/theme/", themeData);
+        Response response = context.getDataManager().createTestTheme();
         context.setResponse(response);
     }
 
     @When("I update a theme")
     public void iUpdateATheme() {
+        Integer themeId = context.getDataManager().getCreatedId("theme");
+        if (themeId == null) {
+            Response createResponse = context.getDataManager().createTestTheme();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    themeId = createResponse.jsonPath().getInt("id");
+                    if (themeId != null) {
+                        context.getDataManager().setCreatedId("theme", themeId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing theme ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
         Map<String, Object> themeData = new HashMap<>();
         themeData.put("theme_name", "Updated Theme");
         themeData.put("json_data", "{\"colors\": {\"primary\": \"#FF6B6B\"}}");
         
-        Response response = client.put("/api/v1/theme/1", themeData);
+        Response response = client.put("/api/v1/theme/" + themeId, themeData);
         context.setResponse(response);
     }
 
     @When("I delete a theme")
     public void iDeleteATheme() {
-        Response response = client.delete("/api/v1/theme/1");
+        Integer themeId = context.getDataManager().getCreatedId("theme");
+        if (themeId == null) {
+            Response createResponse = context.getDataManager().createTestTheme();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    themeId = createResponse.jsonPath().getInt("id");
+                    if (themeId != null) {
+                        context.getDataManager().setCreatedId("theme", themeId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing theme ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
+        Response response = client.delete("/api/v1/theme/" + themeId);
         context.setResponse(response);
     }
 
     @When("I request specific theme")
     public void iRequestSpecificTheme() {
-        Response response = client.get("/api/v1/theme/1");
+        Integer themeId = context.getDataManager().getCreatedId("theme");
+        if (themeId == null) {
+            Response createResponse = context.getDataManager().createTestTheme();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    themeId = createResponse.jsonPath().getInt("id");
+                    if (themeId != null) {
+                        context.getDataManager().setCreatedId("theme", themeId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing theme ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
+        Response response = client.get("/api/v1/theme/" + themeId);
         context.setResponse(response);
     }
 
     @When("I set theme as system dark")
     public void iSetThemeAsSystemDark() {
-        Response response = client.put("/api/v1/theme/1/set_system_dark", "{}");
+        Integer themeId = context.getDataManager().getCreatedId("theme");
+        if (themeId == null) {
+            Response createResponse = context.getDataManager().createTestTheme();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    themeId = createResponse.jsonPath().getInt("id");
+                    if (themeId != null) {
+                        context.getDataManager().setCreatedId("theme", themeId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing theme ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
+        Response response = client.put("/api/v1/theme/" + themeId + "/set_system_dark", "{}");
         context.setResponse(response);
     }
 
     @When("I set theme as system default")
     public void iSetThemeAsSystemDefault() {
-        Response response = client.put("/api/v1/theme/1/set_system_default", "{}");
+        Integer themeId = context.getDataManager().getCreatedId("theme");
+        if (themeId == null) {
+            Response createResponse = context.getDataManager().createTestTheme();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    themeId = createResponse.jsonPath().getInt("id");
+                    if (themeId != null) {
+                        context.getDataManager().setCreatedId("theme", themeId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing theme ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
+        Response response = client.put("/api/v1/theme/" + themeId + "/set_system_default", "{}");
         context.setResponse(response);
     }
 
     @When("I unset system dark theme")
     public void iUnsetSystemDarkTheme() {
-        Response response = client.put("/api/v1/theme/unset_system_dark", "{}");
+        Response response = client.delete("/api/v1/theme/unset_system_dark");
         context.setResponse(response);
     }
 
     @When("I unset system default theme")
     public void iUnsetSystemDefaultTheme() {
-        Response response = client.put("/api/v1/theme/unset_system_default", "{}");
+        Response response = client.delete("/api/v1/theme/unset_system_default");
         context.setResponse(response);
     }
 
     @When("I export theme")
     public void iExportTheme() {
-        Response response = client.get("/api/v1/theme/export/");
+        Integer themeId = context.getDataManager().getCreatedId("theme");
+        if (themeId == null) {
+            Response createResponse = context.getDataManager().createTestTheme();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    themeId = createResponse.jsonPath().getInt("id");
+                    if (themeId != null) {
+                        context.getDataManager().setCreatedId("theme", themeId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing theme ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
+        Map<String, Object> params = new HashMap<>();
+        params.put("q", new Integer[]{themeId});
+        
+        Response response = client.get("/api/v1/theme/export/", params);
         context.setResponse(response);
     }
 

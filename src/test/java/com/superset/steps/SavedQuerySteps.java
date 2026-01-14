@@ -72,7 +72,10 @@ public class SavedQuerySteps {
 
     @When("I export saved queries")
     public void iExportSavedQueries() {
-        Response response = client.get("/api/v1/saved_query/export/");
+        Map<String, Object> params = new HashMap<>();
+        params.put("q", new Integer[]{1});
+        
+        Response response = client.get("/api/v1/saved_query/export/", params);
         context.setResponse(response);
     }
 

@@ -24,7 +24,14 @@ public class SqlLabSteps {
 
     @When("I request distinct values for SQL Lab column")
     public void iRequestDistinctValuesForSqlLabColumn() {
-        Response response = client.get("/api/v1/query/distinct/label");
+        Map<String, Object> q = new HashMap<>();
+        q.put("page", 1);
+        q.put("page_size", 100);
+        
+        Map<String, Object> params = new HashMap<>();
+        params.put("q", q);
+        
+        Response response = client.get("/api/v1/query/distinct/label", params);
         context.setResponse(response);
     }
 
@@ -33,7 +40,8 @@ public class SqlLabSteps {
         Map<String, Object> queryData = new HashMap<>();
         queryData.put("database_id", 1);
         queryData.put("sql", "SELECT * FROM birth_names LIMIT 10");
-        queryData.put("schema", "main");
+        queryData.put("schema", "public");
+        queryData.put("catalog", "superset");
         
         Response response = client.post("/api/v1/sqllab/estimate/", queryData);
         context.setResponse(response);
@@ -53,13 +61,21 @@ public class SqlLabSteps {
 
     @When("I stop query")
     public void iStopQuery() {
-        Response response = client.post("/api/v1/query/stop", "{}");
+        Map<String, Object> stopData = new HashMap<>();
+        stopData.put("client_id", "test_client_id");
+        
+        Response response = client.post("/api/v1/query/stop", stopData);
         context.setResponse(response);
     }
 
     @When("I request updated queries")
     public void iRequestUpdatedQueries() {
-        Response response = client.get("/api/v1/query/updated_since");
+        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> q = new HashMap<>();
+        q.put("last_updated_ms", 0);
+        params.put("q", q);
+        
+        Response response = client.get("/api/v1/query/updated_since", params);
         context.setResponse(response);
     }
 
@@ -80,7 +96,6 @@ public class SqlLabSteps {
         Map<String, Object> sqlData = new HashMap<>();
         sqlData.put("sql", "SELECT * FROM birth_names LIMIT 10");
         sqlData.put("engine", "sqlite");
-        sqlData.put("profiling", false);
         
         Response response = client.post("/api/v1/sqllab/format_sql/", sqlData);
         context.setResponse(response);
@@ -88,7 +103,12 @@ public class SqlLabSteps {
 
     @When("I request SQL Lab permalink")
     public void iRequestSqlLabPermalink() {
-        Response response = client.get("/api/v1/sqllab/permalink");
+        Map<String, Object> permalinkData = new HashMap<>();
+        Map<String, Object> formData = new HashMap<>();
+        formData.put("datasource", "1");
+        permalinkData.put("formData", formData);
+        
+        Response response = client.post("/api/v1/sqllab/permalink", permalinkData);
         context.setResponse(response);
     }
 
@@ -100,7 +120,12 @@ public class SqlLabSteps {
 
     @When("I request query results")
     public void iRequestQueryResults() {
-        Response response = client.get("/api/v1/sqllab/results/");
+        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> q = new HashMap<>();
+        q.put("key", "test_query_key");
+        params.put("q", q);
+        
+        Response response = client.get("/api/v1/sqllab/results/", params);
         context.setResponse(response);
     }
 }

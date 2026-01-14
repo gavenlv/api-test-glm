@@ -1,0 +1,120 @@
+<mxfile host="65bd71144e">
+    <diagram id="tiered-storage" name="Tiered Storage Architecture">
+        <mxGraphModel dx="875" dy="581" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="user-layer" value="User" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="40" width="160" height="600" as="geometry"/>
+                </mxCell>
+                <mxCell id="users" value="Users" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="user-layer" vertex="1">
+                    <mxGeometry x="40" y="40" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="applications" value="Applications" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="user-layer" vertex="1">
+                    <mxGeometry x="40" y="120" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="apis" value="APIs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="user-layer" vertex="1">
+                    <mxGeometry x="40" y="200" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="service-layer" value="Service Layer" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="200" y="40" width="200" height="600" as="geometry"/>
+                </mxCell>
+                <mxCell id="api-gateway" value="API Gateway" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" parent="service-layer" vertex="1">
+                    <mxGeometry x="60" y="40" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="auth-service" value="Auth Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" parent="service-layer" vertex="1">
+                    <mxGeometry x="60" y="120" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="query-router" value="Query Router" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" parent="service-layer" vertex="1">
+                    <mxGeometry x="60" y="200" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="cache-layer" value="Cache Layer&lt;br&gt;(Redis/Memcached)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="service-layer" vertex="1">
+                    <mxGeometry x="60" y="300" width="80" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="tier-manager" value="Tier Manager&lt;br&gt;(TTL, TTL move, Data Retention)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" parent="service-layer" vertex="1">
+                    <mxGeometry x="60" y="400" width="80" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="clickhouse-layer" value="ClickHouse Cluster" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="40" width="400" height="600" as="geometry"/>
+                </mxCell>
+                <mxCell id="hot-tier" value="HOT TIER (SSD)&lt;br&gt;High Performance&lt;br&gt;High Cost" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="clickhouse-layer" vertex="1">
+                    <mxGeometry x="20" y="50" width="170" height="200" as="geometry">
+                        <mxRectangle x="20" y="50" width="140" height="60" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="hot-storage" value="Local SSD&lt;br&gt;(Hot Data)&lt;br&gt;0-30 days" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" parent="hot-tier" vertex="1">
+                    <mxGeometry x="35" y="60" width="100" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="hot-perf" value="⚡ Fast Query&lt;br&gt;&lt; 100ms" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff1a8;strokeColor=#d79b00;" parent="hot-tier" vertex="1">
+                    <mxGeometry x="35" y="150" width="100" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="warm-tier" value="WARM TIER (GCS)&lt;br&gt;Medium Performance&lt;br&gt;Medium Cost" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="clickhouse-layer" vertex="1">
+                    <mxGeometry x="210" y="50" width="170" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="warm-storage" value="GCS Standard&lt;br&gt;(Warm Data)&lt;br&gt;30-90 days" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" parent="warm-tier" vertex="1">
+                    <mxGeometry x="35" y="60" width="100" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="warm-perf" value="🚄 Fast Query&lt;br&gt;&lt; 1s" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff1a8;strokeColor=#d79b00;" parent="warm-tier" vertex="1">
+                    <mxGeometry x="35" y="150" width="100" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="cold-tier" value="COLD TIER (GCS Archive)&lt;br&gt;Low Performance&lt;br&gt;Low Cost" style="swimlane;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="clickhouse-layer" vertex="1">
+                    <mxGeometry x="20" y="270" width="360" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="gcs-nearline" value="GCS Nearline&lt;br&gt;(Cold Data)&lt;br&gt;90-365 days" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" parent="cold-tier" vertex="1">
+                    <mxGeometry x="30" y="50" width="90" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="gcs-coldline" value="GCS Coldline&lt;br&gt;(Archive Data)&lt;br&gt;&gt; 365 days" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" parent="cold-tier" vertex="1">
+                    <mxGeometry x="135" y="50" width="90" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="gcs-archive" value="GCS Archive&lt;br&gt;(Long-term)&lt;br&gt;Compliance" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" parent="cold-tier" vertex="1">
+                    <mxGeometry x="240" y="50" width="90" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="cold-perf" value="🐢 Slower Query&lt;br&gt;Data Restore Required" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff1a8;strokeColor=#d79b00;" parent="cold-tier" vertex="1">
+                    <mxGeometry x="135" y="115" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="users" target="api-gateway" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="api-gateway" target="query-router" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="query-router" target="hot-storage" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=8 4;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="hot-storage" target="warm-storage" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=8 4;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="warm-storage" target="gcs-nearline" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=8 4;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="gcs-nearline" target="gcs-coldline" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=8 4;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="gcs-coldline" target="gcs-archive" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cost-section" value="COST SAVINGS" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="660" width="760" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="cost-ssd" value="💰 SSD: $0.15/GB/mo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="cost-section" vertex="1">
+                    <mxGeometry x="60" y="25" width="130" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="cost-gcs-std" value="💵 GCS Standard: $0.02/GB/mo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="cost-section" vertex="1">
+                    <mxGeometry x="210" y="25" width="130" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="cost-gcs-near" value="💵 GCS Nearline: $0.01/GB/mo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="cost-section" vertex="1">
+                    <mxGeometry x="360" y="25" width="130" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="cost-gcs-cold" value="💸 GCS Coldline: $0.004/GB/mo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="cost-section" vertex="1">
+                    <mxGeometry x="510" y="25" width="110" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="cost-gcs-arch" value="💸 GCS Archive: $0.001/GB/mo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="cost-section" vertex="1">
+                    <mxGeometry x="640" y="25" width="110" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend" value="LEGEND: Data Flow → | Tier Migration ⋯⋯ | TTL-based automatic movement based on data age and access patterns" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="770" width="760" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

@@ -30,18 +30,22 @@ public class TagSteps {
 
     @When("I create a tag")
     public void iCreateATag() {
-        Map<String, Object> tagData = new HashMap<>();
-        tagData.put("name", "Test Tag");
-        tagData.put("description", "Test tag description");
-        
-        Response response = client.post("/api/v1/tag/", tagData);
+        Response response = context.getDataManager().createTestTag();
         context.setResponse(response);
     }
 
     @When("I bulk create tags")
     public void iBulkCreateTags() {
         Map<String, Object> tagData = new HashMap<>();
-        tagData.put("names", new String[]{"Tag1", "Tag2", "Tag3"});
+        Map<String, Object> tag1 = new HashMap<>();
+        tag1.put("name", "Tag1_" + System.currentTimeMillis());
+        tag1.put("description", "Test tag 1");
+        
+        Map<String, Object> tag2 = new HashMap<>();
+        tag2.put("name", "Tag2_" + System.currentTimeMillis());
+        tag2.put("description", "Test tag 2");
+        
+        tagData.put("tags", new Object[]{tag1, tag2});
         
         Response response = client.post("/api/v1/tag/bulk_create", tagData);
         context.setResponse(response);
@@ -49,59 +53,160 @@ public class TagSteps {
 
     @When("I update a tag")
     public void iUpdateATag() {
+        Integer tagId = context.getDataManager().getCreatedId("tag");
+        if (tagId == null) {
+            Response createResponse = context.getDataManager().createTestTag();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    tagId = createResponse.jsonPath().getInt("id");
+                    if (tagId != null) {
+                        context.getDataManager().setCreatedId("tag", tagId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing tag ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
         Map<String, Object> tagData = new HashMap<>();
         tagData.put("name", "Updated Tag");
         tagData.put("description", "Updated tag description");
         
-        Response response = client.put("/api/v1/tag/1", tagData);
+        Response response = client.put("/api/v1/tag/" + tagId, tagData);
         context.setResponse(response);
     }
 
     @When("I delete a tag")
     public void iDeleteATag() {
-        Response response = client.delete("/api/v1/tag/1");
+        Integer tagId = context.getDataManager().getCreatedId("tag");
+        if (tagId == null) {
+            Response createResponse = context.getDataManager().createTestTag();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    tagId = createResponse.jsonPath().getInt("id");
+                    if (tagId != null) {
+                        context.getDataManager().setCreatedId("tag", tagId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing tag ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
+        Response response = client.delete("/api/v1/tag/" + tagId);
         context.setResponse(response);
     }
 
     @When("I request specific tag")
     public void iRequestSpecificTag() {
-        Response response = client.get("/api/v1/tag/1");
+        Integer tagId = context.getDataManager().getCreatedId("tag");
+        if (tagId == null) {
+            Response createResponse = context.getDataManager().createTestTag();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    tagId = createResponse.jsonPath().getInt("id");
+                    if (tagId != null) {
+                        context.getDataManager().setCreatedId("tag", tagId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing tag ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
+        Response response = client.get("/api/v1/tag/" + tagId);
         context.setResponse(response);
     }
 
     @When("I request tag favorite status")
     public void iRequestTagFavoriteStatus() {
-        Map<String, Object> emptyBody = new HashMap<>();
-        Response response = client.post("/api/v1/tag/favorite_status/", emptyBody);
+        Integer tagId = context.getDataManager().getCreatedId("tag");
+        if (tagId == null) {
+            Response createResponse = context.getDataManager().createTestTag();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    tagId = createResponse.jsonPath().getInt("id");
+                    if (tagId != null) {
+                        context.getDataManager().setCreatedId("tag", tagId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing tag ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
+        Map<String, Object> params = new HashMap<>();
+        params.put("q", new Integer[]{tagId});
+        
+        Response response = client.get("/api/v1/tag/favorite_status/", params);
         context.setResponse(response);
     }
 
     @When("I request tag favorites")
     public void iRequestTagFavorites() {
-        Map<String, Object> emptyBody = new HashMap<>();
-        Response response = client.post("/api/v1/tag/1/favorites/", emptyBody);
-        context.setResponse(response);
-    }
-
-    @When("I request objects with tag")
-    public void iRequestObjectsWithTag() {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("tag_names", new String[]{"TestTag"});
-        Response response = client.post("/api/v1/tag/get_objects/", requestBody);
+        Integer tagId = context.getDataManager().getCreatedId("tag");
+        if (tagId == null) {
+            Response createResponse = context.getDataManager().createTestTag();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    tagId = createResponse.jsonPath().getInt("id");
+                    if (tagId != null) {
+                        context.getDataManager().setCreatedId("tag", tagId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing tag ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
+        Response response = client.post("/api/v1/tag/" + tagId + "/favorites/", "{}");
         context.setResponse(response);
     }
 
     @When("I tag an object")
     public void iTagAnObject() {
+        Integer tagId = context.getDataManager().getCreatedId("tag");
+        if (tagId == null) {
+            Response createResponse = context.getDataManager().createTestTag();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    tagId = createResponse.jsonPath().getInt("id");
+                    if (tagId != null) {
+                        context.getDataManager().setCreatedId("tag", tagId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing tag ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("tag_name", "TestTag");
-        Response response = client.put("/api/v1/tag/dashboard/1/", requestBody);
+        requestBody.put("tags", new String[]{"TestTag"});
+        Response response = client.post("/api/v1/tag/1/1/", requestBody);
+        context.setResponse(response);
+    }
+
+    @When("I request objects with tag")
+    public void iRequestObjectsWithTag() {
+        Response response = client.get("/api/v1/tag/get_objects/");
         context.setResponse(response);
     }
 
     @When("I untag an object")
     public void iUntagAnObject() {
-        Response response = client.delete("/api/v1/tag/dashboard/1/TestTag/");
+        Response response = client.delete("/api/v1/tag/1/1/TestTag/");
         context.setResponse(response);
     }
 }

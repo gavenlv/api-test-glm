@@ -96,8 +96,10 @@ public class SecuritySteps {
 
     @When("I request role groups")
     public void iRequestRoleGroups() {
-        Map<String, Object> emptyBody = new java.util.HashMap<>();
-        Response response = client.put("/api/v1/security/roles/1/groups", emptyBody);
+        Map<String, Object> roleGroupData = new HashMap<>();
+        roleGroupData.put("group_ids", new Integer[]{1});
+        
+        Response response = client.put("/api/v1/security/roles/1/groups", roleGroupData);
         context.setResponse(response);
     }
 
@@ -109,8 +111,10 @@ public class SecuritySteps {
 
     @When("I request role users")
     public void iRequestRoleUsers() {
-        Map<String, Object> emptyBody = new java.util.HashMap<>();
-        Response response = client.put("/api/v1/security/roles/1/users", emptyBody);
+        Map<String, Object> roleUserData = new HashMap<>();
+        roleUserData.put("user_ids", new Integer[]{1});
+        
+        Response response = client.put("/api/v1/security/roles/1/users", roleUserData);
         context.setResponse(response);
     }
 

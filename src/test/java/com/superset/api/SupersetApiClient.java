@@ -38,6 +38,14 @@ public class SupersetApiClient {
             .get(endpoint);
     }
 
+    public Response get(String endpoint, Map<String, Object> queryParams) {
+        return RestAssured.given()
+            .baseUri(BASE_URL)
+            .header("Authorization", "Bearer " + accessToken)
+            .queryParams(queryParams)
+            .get(endpoint);
+    }
+
     public Response post(String endpoint, Object body) {
         return RestAssured.given()
             .baseUri(BASE_URL)
