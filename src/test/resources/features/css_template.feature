@@ -20,17 +20,20 @@ Feature: CSS Template API
 
   Scenario: Update CSS template
     Given I am logged in
-    When I update a CSS template
+    When I create a CSS template
+    And I update a CSS template
     Then the response status should be 200
 
   Scenario: Delete CSS template
     Given I am logged in
-    When I delete a CSS template
+    When I create a CSS template
+    And I delete a CSS template
     Then the response status should be 200 or 202
 
   Scenario: Get specific CSS template
     Given I am logged in
-    When I request specific CSS template
+    When I create a CSS template
+    And I request specific CSS template
     Then the response status should be 200 or 404
 
   Scenario: Get related column values

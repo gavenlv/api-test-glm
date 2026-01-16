@@ -25,20 +25,24 @@ Feature: Report API
 
   Scenario: Update report
     Given I am logged in
-    When I update a report
+    When I create a report
+    And I update a report
     Then the response status should be 200
 
   Scenario: Delete report
     Given I am logged in
-    When I delete a report
+    When I create a report
+    And I delete a report
     Then the response status should be 200 or 202
 
   Scenario: Get report logs
     Given I am logged in
-    When I request report logs
+    When I create a report
+    And I request report logs
     Then the response status should be 200
 
   Scenario: Get specific report log
     Given I am logged in
-    When I request specific report log
+    When I create a report
+    And I request specific report log
     Then the response status should be 200

@@ -30,33 +30,80 @@ public class CssTemplateSteps {
 
     @When("I create a CSS template")
     public void iCreateACssTemplate() {
-        Map<String, Object> templateData = new HashMap<>();
-        templateData.put("template_name", "Test CSS Template");
-        templateData.put("css", ".test { color: red; }");
-        
-        Response response = client.post("/api/v1/css_template/", templateData);
+        Response response = context.getDataManager().createTestCssTemplate();
         context.setResponse(response);
     }
 
     @When("I update a CSS template")
     public void iUpdateACssTemplate() {
+        Integer templateId = context.getDataManager().getCreatedId("css_template");
+        if (templateId == null) {
+            Response createResponse = context.getDataManager().createTestCssTemplate();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    templateId = createResponse.jsonPath().getInt("id");
+                    if (templateId != null) {
+                        context.getDataManager().setCreatedId("css_template", templateId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing CSS template ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
         Map<String, Object> templateData = new HashMap<>();
         templateData.put("template_name", "Updated CSS Template");
         templateData.put("css", ".test { color: blue; }");
         
-        Response response = client.put("/api/v1/css_template/1", templateData);
+        Response response = client.put("/api/v1/css_template/" + templateId, templateData);
         context.setResponse(response);
     }
 
     @When("I delete a CSS template")
     public void iDeleteACssTemplate() {
-        Response response = client.delete("/api/v1/css_template/1");
+        Integer templateId = context.getDataManager().getCreatedId("css_template");
+        if (templateId == null) {
+            Response createResponse = context.getDataManager().createTestCssTemplate();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    templateId = createResponse.jsonPath().getInt("id");
+                    if (templateId != null) {
+                        context.getDataManager().setCreatedId("css_template", templateId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing CSS template ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
+        Response response = client.delete("/api/v1/css_template/" + templateId);
         context.setResponse(response);
     }
 
     @When("I request specific CSS template")
     public void iRequestSpecificCssTemplate() {
-        Response response = client.get("/api/v1/css_template/1");
+        Integer templateId = context.getDataManager().getCreatedId("css_template");
+        if (templateId == null) {
+            Response createResponse = context.getDataManager().createTestCssTemplate();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    templateId = createResponse.jsonPath().getInt("id");
+                    if (templateId != null) {
+                        context.getDataManager().setCreatedId("css_template", templateId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing CSS template ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
+        Response response = client.get("/api/v1/css_template/" + templateId);
         context.setResponse(response);
     }
 

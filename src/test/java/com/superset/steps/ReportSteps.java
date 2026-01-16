@@ -38,53 +38,103 @@ public class ReportSteps {
 
     @When("I create a report")
     public void iCreateAReport() {
-        Map<String, Object> reportData = new HashMap<>();
-        reportData.put("name", "Test Report");
-        reportData.put("description", "Test report description");
-        reportData.put("active", true);
-        reportData.put("crontab", "0 0 * * *");
-        reportData.put("database", 1);
-        reportData.put("creation_method", "alerts_reports");
-        reportData.put("report_format", "PNG");
-        reportData.put("log_retention", 90);
-        
-        Map<String, Object> recipient = new HashMap<>();
-        recipient.put("type", "Email");
-        Map<String, Object> recipientConfig = new HashMap<>();
-        recipientConfig.put("target", "admin@example.com");
-        recipient.put("recipient_config_json", recipientConfig);
-        
-        reportData.put("recipients", new Object[]{recipient});
-        
-        Response response = client.post("/api/v1/report/", reportData);
+        Response response = context.getDataManager().createTestReport();
         context.setResponse(response);
     }
 
     @When("I update a report")
     public void iUpdateAReport() {
+        Integer reportId = context.getDataManager().getCreatedId("report");
+        if (reportId == null) {
+            Response createResponse = context.getDataManager().createTestReport();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    reportId = createResponse.jsonPath().getInt("id");
+                    if (reportId != null) {
+                        context.getDataManager().setCreatedId("report", reportId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing report ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
         Map<String, Object> reportData = new HashMap<>();
         reportData.put("name", "Updated Test Report");
         reportData.put("description", "Updated test report description");
         
-        Response response = client.put("/api/v1/report/1", reportData);
+        Response response = client.put("/api/v1/report/" + reportId, reportData);
         context.setResponse(response);
     }
 
     @When("I delete a report")
     public void iDeleteAReport() {
-        Response response = client.delete("/api/v1/report/1");
+        Integer reportId = context.getDataManager().getCreatedId("report");
+        if (reportId == null) {
+            Response createResponse = context.getDataManager().createTestReport();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    reportId = createResponse.jsonPath().getInt("id");
+                    if (reportId != null) {
+                        context.getDataManager().setCreatedId("report", reportId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing report ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
+        Response response = client.delete("/api/v1/report/" + reportId);
         context.setResponse(response);
     }
 
     @When("I request report logs")
     public void iRequestReportLogs() {
-        Response response = client.get("/api/v1/report/1/log/");
+        Integer reportId = context.getDataManager().getCreatedId("report");
+        if (reportId == null) {
+            Response createResponse = context.getDataManager().createTestReport();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    reportId = createResponse.jsonPath().getInt("id");
+                    if (reportId != null) {
+                        context.getDataManager().setCreatedId("report", reportId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing report ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
+        Response response = client.get("/api/v1/report/" + reportId + "/log/");
         context.setResponse(response);
     }
 
     @When("I request specific report log")
     public void iRequestSpecificReportLog() {
-        Response response = client.get("/api/v1/report/1/log/1");
+        Integer reportId = context.getDataManager().getCreatedId("report");
+        if (reportId == null) {
+            Response createResponse = context.getDataManager().createTestReport();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    reportId = createResponse.jsonPath().getInt("id");
+                    if (reportId != null) {
+                        context.getDataManager().setCreatedId("report", reportId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing report ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
+        Response response = client.get("/api/v1/report/" + reportId + "/log/1");
         context.setResponse(response);
     }
 }

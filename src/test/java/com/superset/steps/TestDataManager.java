@@ -45,6 +45,15 @@ public class TestDataManager {
                         case "database":
                             client.delete("/api/v1/database/" + id);
                             break;
+                        case "annotation_layer":
+                            client.delete("/api/v1/annotation_layer/" + id);
+                            break;
+                        case "css_template":
+                            client.delete("/api/v1/css_template/" + id);
+                            break;
+                        case "report":
+                            client.delete("/api/v1/report/" + id);
+                            break;
                     }
                 }
             } catch (Exception e) {
@@ -147,6 +156,77 @@ public class TestDataManager {
                 }
             } catch (Exception e) {
                 System.err.println("Error parsing database ID: " + e.getMessage());
+            }
+        }
+        return response;
+    }
+
+    public Response createTestAnnotationLayer() {
+        Map<String, Object> layerData = new HashMap<>();
+        layerData.put("name", "Test Annotation Layer " + System.currentTimeMillis());
+        layerData.put("descr", "Test annotation layer description");
+        
+        Response response = client.post("/api/v1/annotation_layer/", layerData);
+        if (response.statusCode() == 200 || response.statusCode() == 201) {
+            try {
+                Integer id = response.jsonPath().getInt("id");
+                if (id != null) {
+                    setCreatedId("annotation_layer", id);
+                }
+            } catch (Exception e) {
+                System.err.println("Error parsing annotation layer ID: " + e.getMessage());
+            }
+        }
+        return response;
+    }
+
+    public Response createTestCssTemplate() {
+        Map<String, Object> templateData = new HashMap<>();
+        templateData.put("template_name", "Test CSS Template " + System.currentTimeMillis());
+        templateData.put("css", ".test { color: red; }");
+        
+        Response response = client.post("/api/v1/css_template/", templateData);
+        if (response.statusCode() == 200 || response.statusCode() == 201) {
+            try {
+                Integer id = response.jsonPath().getInt("id");
+                if (id != null) {
+                    setCreatedId("css_template", id);
+                }
+            } catch (Exception e) {
+                System.err.println("Error parsing CSS template ID: " + e.getMessage());
+            }
+        }
+        return response;
+    }
+
+    public Response createTestReport() {
+        Map<String, Object> reportData = new HashMap<>();
+        reportData.put("name", "Test Report " + System.currentTimeMillis());
+        reportData.put("description", "Test report description");
+        reportData.put("active", true);
+        reportData.put("crontab", "0 0 * * *");
+        reportData.put("database", 1);
+        reportData.put("creation_method", "alerts_reports");
+        reportData.put("report_format", "PNG");
+        reportData.put("log_retention", 90);
+        
+        Map<String, Object> recipient = new HashMap<>();
+        recipient.put("type", "Email");
+        Map<String, Object> recipientConfig = new HashMap<>();
+        recipientConfig.put("target", "admin@example.com");
+        recipient.put("recipient_config_json", recipientConfig);
+        
+        reportData.put("recipients", new Object[]{recipient});
+        
+        Response response = client.post("/api/v1/report/", reportData);
+        if (response.statusCode() == 200 || response.statusCode() == 201) {
+            try {
+                Integer id = response.jsonPath().getInt("id");
+                if (id != null) {
+                    setCreatedId("report", id);
+                }
+            } catch (Exception e) {
+                System.err.println("Error parsing report ID: " + e.getMessage());
             }
         }
         return response;

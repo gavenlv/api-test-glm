@@ -30,50 +30,117 @@ public class SavedQuerySteps {
 
     @When("I request distinct values for saved query column")
     public void iRequestDistinctValuesForSavedQueryColumn() {
-        Response response = client.get("/api/v1/saved_query/distinct/label");
+        Map<String, Object> q = new HashMap<>();
+        q.put("page", 1);
+        q.put("page_size", 100);
+        
+        Map<String, Object> params = new HashMap<>();
+        params.put("q", q);
+        
+        Response response = client.get("/api/v1/saved_query/distinct/label", params);
         context.setResponse(response);
     }
 
     @When("I create a saved query")
     public void iCreateASavedQuery() {
-        Map<String, Object> queryData = new HashMap<>();
-        queryData.put("label", "Test Saved Query");
-        queryData.put("description", "Test saved query description");
-        queryData.put("schema", "public");
-        queryData.put("catalog", "superset");
-        queryData.put("sql", "SELECT * FROM test_users LIMIT 10");
-        queryData.put("db_id", 1);
-        
-        Response response = client.post("/api/v1/saved_query/", queryData);
+        Response response = context.getDataManager().createTestSavedQuery();
         context.setResponse(response);
     }
 
     @When("I update a saved query")
     public void iUpdateASavedQuery() {
+        Integer queryId = context.getDataManager().getCreatedId("saved_query");
+        if (queryId == null) {
+            Response createResponse = context.getDataManager().createTestSavedQuery();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    queryId = createResponse.jsonPath().getInt("id");
+                    if (queryId != null) {
+                        context.getDataManager().setCreatedId("saved_query", queryId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing saved query ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
         Map<String, Object> queryData = new HashMap<>();
         queryData.put("label", "Updated Saved Query");
         queryData.put("description", "Updated saved query description");
         
-        Response response = client.put("/api/v1/saved_query/1", queryData);
+        Response response = client.put("/api/v1/saved_query/" + queryId, queryData);
         context.setResponse(response);
     }
 
     @When("I delete a saved query")
     public void iDeleteASavedQuery() {
-        Response response = client.delete("/api/v1/saved_query/1");
+        Integer queryId = context.getDataManager().getCreatedId("saved_query");
+        if (queryId == null) {
+            Response createResponse = context.getDataManager().createTestSavedQuery();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    queryId = createResponse.jsonPath().getInt("id");
+                    if (queryId != null) {
+                        context.getDataManager().setCreatedId("saved_query", queryId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing saved query ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
+        Response response = client.delete("/api/v1/saved_query/" + queryId);
         context.setResponse(response);
     }
 
     @When("I request specific saved query")
     public void iRequestSpecificSavedQuery() {
-        Response response = client.get("/api/v1/saved_query/1");
+        Integer queryId = context.getDataManager().getCreatedId("saved_query");
+        if (queryId == null) {
+            Response createResponse = context.getDataManager().createTestSavedQuery();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    queryId = createResponse.jsonPath().getInt("id");
+                    if (queryId != null) {
+                        context.getDataManager().setCreatedId("saved_query", queryId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing saved query ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
+        Response response = client.get("/api/v1/saved_query/" + queryId);
         context.setResponse(response);
     }
 
     @When("I export saved queries")
     public void iExportSavedQueries() {
+        Integer queryId = context.getDataManager().getCreatedId("saved_query");
+        if (queryId == null) {
+            Response createResponse = context.getDataManager().createTestSavedQuery();
+            context.setResponse(createResponse);
+            if (createResponse.statusCode() == 200 || createResponse.statusCode() == 201) {
+                try {
+                    queryId = createResponse.jsonPath().getInt("id");
+                    if (queryId != null) {
+                        context.getDataManager().setCreatedId("saved_query", queryId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing saved query ID: " + e.getMessage());
+                }
+            }
+            return;
+        }
+        
         Map<String, Object> params = new HashMap<>();
-        params.put("q", new Integer[]{1});
+        params.put("q", new Integer[]{queryId});
         
         Response response = client.get("/api/v1/saved_query/export/", params);
         context.setResponse(response);

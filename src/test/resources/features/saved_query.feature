@@ -25,22 +25,26 @@ Feature: Saved Query API
 
   Scenario: Update saved query
     Given I am logged in
-    When I update a saved query
+    When I create a saved query
+    And I update a saved query
     Then the response status should be 200
 
   Scenario: Delete saved query
     Given I am logged in
-    When I delete a saved query
+    When I create a saved query
+    And I delete a saved query
     Then the response status should be 200 or 202
 
   Scenario: Get specific saved query
     Given I am logged in
-    When I request specific saved query
+    When I create a saved query
+    And I request specific saved query
     Then the response status should be 200 or 404
 
   Scenario: Export saved query
     Given I am logged in
-    When I export saved queries
+    When I create a saved query
+    And I export saved queries
     Then the response status should be 200
 
   Scenario: Import saved query

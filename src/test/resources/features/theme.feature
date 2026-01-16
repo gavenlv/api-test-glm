@@ -20,27 +20,32 @@ Feature: Theme API
 
   Scenario: Update theme
     Given I am logged in
-    When I update a theme
+    When I create a theme
+    And I update a theme
     Then the response status should be 200
 
   Scenario: Delete theme
     Given I am logged in
-    When I delete a theme
+    When I create a theme
+    And I delete a theme
     Then the response status should be 200 or 202
 
   Scenario: Get specific theme
     Given I am logged in
-    When I request specific theme
+    When I create a theme
+    And I request specific theme
     Then the response status should be 200 or 404
 
   Scenario: Set theme as system dark
     Given I am logged in
-    When I set theme as system dark
+    When I create a theme
+    And I set theme as system dark
     Then the response status should be 200
 
   Scenario: Set theme as system default
     Given I am logged in
-    When I set theme as system default
+    When I create a theme
+    And I set theme as system default
     Then the response status should be 200
 
   Scenario: Unset system dark theme
@@ -55,7 +60,8 @@ Feature: Theme API
 
   Scenario: Export theme
     Given I am logged in
-    When I export theme
+    When I create a theme
+    And I export theme
     Then the response status should be 200
 
   Scenario: Import theme
